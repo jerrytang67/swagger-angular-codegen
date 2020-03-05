@@ -174,7 +174,12 @@ interface IRequestSchema {
 
 /** requestTemplate */
 export function requestTemplate(name: string, requestSchema: IRequestSchema, options: any) {
-  let { summary = '', parameters = '', responseType = '', method = '', path = '', } = requestSchema
+  let {
+    summary = '',
+    parameters = '',
+    responseType = '',
+    method = '',
+    path = '', } = requestSchema
   path = path.replace(/{[^}]+}/, '');
   return `
 /**
@@ -182,11 +187,8 @@ export function requestTemplate(name: string, requestSchema: IRequestSchema, opt
  */
 ${options.useStaticMethod ? 'static' : ''} ${camelcase(name)}(${parameters}):Observable<${responseType}> {
   let url = '${path}'
-  let options : any = {
-      ${parametersStr(method, parameters)}
-      method: "${method}"
-  };
-  return this.http.request("${method}", url, options) as Observable<${responseType}>;
+  ${optionsStr(method, parameters)}
+  return this.http.request("${method}", url, options) as any as Observable<${responseType}>;
 }`
 }
 
@@ -201,14 +203,23 @@ export function serviceTemplate(name: string, body: string) {
   `
 }
 
-export function parametersStr(method: string, parameters: string): string {
+export function optionsStr(method: string, parameters: string): string {
   if (method == "get") {
     if (parameters)
-      return `params: new HttpParams({ fromObject: params }),`.replace(/ number| boolean/, " string");
+      return `const _copy: any = {...params}
+      let options : any = {
+          params: new HttpParams({ fromObject: _copy }),
+          method: "${method}"
+      };`
     else
-      return ""
+      return `let options : any = {
+        method: "${method}"
+      };`
   }
   else {
-    return `body: params,`
+    return `let options : any = {
+      body: params,
+      method: "${method}"
+      };`
   }
 }
