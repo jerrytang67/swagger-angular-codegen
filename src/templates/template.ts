@@ -174,14 +174,19 @@ interface IRequestSchema {
 
 /** requestTemplate */
 export function requestTemplate(name: string, requestSchema: IRequestSchema, options: any) {
-  let { summary = '', parameters = '', responseType = '', path = '', } = requestSchema
+  let { summary = '', parameters = '', responseType = '', method = '', path = '', } = requestSchema
+  path = path.replace(/{[^}]+}/, '');
   return `
 /**
  * ${summary || ''}
  */
-${options.useStaticMethod ? 'static' : ''} ${camelcase(name)}(${parameters}params:any={}):Observable<${responseType}> {
+${options.useStaticMethod ? 'static' : ''} ${camelcase(name)}(${parameters}):Observable<${responseType}> {
   let url = '${path}'
-  return this.http.get(url, params);
+  let options : any = {
+      ${parametersStr(method, parameters)}
+      method: "${method}"
+  };
+  return this.http.request("${method}", url, options) as Observable<${responseType}>;
 }`
 }
 
@@ -190,10 +195,20 @@ export function serviceTemplate(name: string, body: string) {
   return `
   @Injectable({ providedIn: 'root' })
   export class ${name} {
-      constructor(private http: HttpClient) {
-      }
-  
+      constructor(private http: HttpClient) {}
       ${body}
   } 
   `
+}
+
+export function parametersStr(method: string, parameters: string): string {
+  if (method == "get") {
+    if (parameters)
+      return `params: new HttpParams({ fromObject: params }),`.replace(/ number| boolean/, " string");
+    else
+      return ""
+  }
+  else {
+    return `body: params,`
+  }
 }

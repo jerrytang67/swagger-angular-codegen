@@ -1,6 +1,6 @@
 {
   "name": "swagger-angular-codegen",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "./dist/index",
   "typings": "./dist/",
   "author": "JerryTang",
@@ -25,10 +25,13 @@
     "prepublish": "npm run build"
   },
   "dependencies": {
+    "@angular/common": "^9.0.5",
+    "@angular/core": "^9.0.5",
     "axios": "^0.19.0",
     "camelcase": "^5.0.0",
     "pascalcase": "^0.1.1",
     "prettier": "^1.15.2",
+    "rxjs": "^6.5.4",
     "structured-log": "^0.2.0"
   },
   "devDependencies": {
