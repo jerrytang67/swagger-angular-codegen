@@ -1,0 +1,40 @@
+{
+  "name": "swagger-angular-codegen",
+  "version": "0.0.1",
+  "main": "./dist/index",
+  "typings": "./dist/",
+  "author": "JerryTang",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/jerrytang67/swagger-angular-codegen",
+    "type": "git"
+  },
+  "keywords": [
+    "swagger",
+    "angular",
+    "typescript",
+    "generator",
+    "codegen"
+  ],
+  "scripts": {
+    "build": "tsc -p ./src",
+    "prestart": "npm run build",
+    "precommit": "prettier --write --config .prettierrc ./src/*.ts",
+    "start": "node ./dist/index",
+    "watch": "tsc --watch -p ./src ",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "camelcase": "^5.0.0",
+    "pascalcase": "^0.1.1",
+    "prettier": "^1.15.2",
+    "structured-log": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.2",
+    "@types/prettier": "^1.12.2",
+    "tslint": "^5.10.0",
+    "typescript": "^3.7.2"
+  }
+}

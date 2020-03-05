@@ -1,0 +1,70 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Orion API"
+  },
+  "paths": {},
+  "definitions": {
+    "CreateOrUpdateUserInput": {
+      "required": [
+        "cardNo",
+        "userName",
+        "password"
+      ],
+      "type": "object",
+      "properties": {
+        "userId": {
+          "format": "int32",
+          "description": "用户ID(ID来自User表)",
+          "type": "integer"
+        },
+        "userRights": {
+          "description": "用户权限",
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "enum": [
+              "View",
+              "Operate",
+              "Auth",
+              "Search",
+              "Delete",
+              "UserManage",
+              "UserConfig",
+              "SetTime",
+              "SetNetwork",
+              "SetSms",
+              "SystemManage"
+            ],
+            "type": "string"
+          }
+        },
+        "features": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "number",
+            "enum": [
+              10,
+              11,
+              20,
+              30,
+              40,
+              50,
+              51,
+              61,
+              71,
+              72
+            ]
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "basic"
+    }
+  }
+}
