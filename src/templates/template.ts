@@ -216,7 +216,20 @@ export function optionsStr(method: string, parameters: string): string {
         method: "${method}"
       };`
   }
-  else {
+  else if (method == "put") {
+    return `let options : any = {
+      params: { id: params.id },
+      body: params.body,
+      method: "${method}"
+      };`
+  }
+  else if (method == "delete") {
+    return `let options : any = {
+      params: { id: params.id },
+      method: "${method}"
+      };`
+  }
+  else if (method == "post") {
     return `let options : any = {
       body: params.body,
       method: "${method}"
