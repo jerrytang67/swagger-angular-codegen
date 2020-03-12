@@ -218,7 +218,7 @@ export function optionsStr(method: string, parameters: string): string {
   }
   else {
     return `let options : any = {
-      body: params,
+      body: params.body,
       method: "${method}"
       };`
   }
