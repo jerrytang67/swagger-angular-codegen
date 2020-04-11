@@ -9,6 +9,7 @@ export interface ISwaggerOptions {
   useStaticMethod?: boolean | undefined
   useCustomerRequestInstance?: boolean | undefined
   include?: Array<string | IInclude>
+  exclude?: string[]
   format?: (s: string) => string
   /** match with tsconfig */
   strictNullChecks?: boolean | undefined

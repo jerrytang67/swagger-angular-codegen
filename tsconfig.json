@@ -3,7 +3,8 @@
   "exclude": [
     "./dist",
     "./example",
-    "./test"
+    "./test",
+    ".dist/api"
   ],
   "include": [
     "./typings",

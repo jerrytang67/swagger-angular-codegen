@@ -62,12 +62,12 @@ export async function codegen(params: ISwaggerOptions) {
   // 判断是否是openApi3.0或者swagger3.0
   const isV3 = isOpenApi3(params.openApi || swaggerSource.openapi || swaggerSource.swagger)
   console.log('isV3', isV3)
+  console.log("options.include:", options.include)
   let requestClasses = Object.entries(requestCodegen(swaggerSource.paths, isV3))
 
   const { models, enums } = isV3
     ? componentsCodegen(swaggerSource.components)
     : definitionsCodeGen(swaggerSource.definitions)
-
   if (options.include && options.include.length > 0) {
     // 接口过滤入口
     let reqSource = ''
@@ -91,7 +91,9 @@ export async function codegen(params: ISwaggerOptions) {
         }
       }
       for (let [className, requests] of requestClasses) {
-        if (pascalcase(includeClassName) !== className) continue
+        if (pascalcase(includeClassName) === className) {
+          continue
+        }
         let text = ''
         for (let req of requests) {
           const reqName = options.methodNameMode == 'operationId' ? req.operationId : req.name
@@ -157,13 +159,16 @@ export async function codegen(params: ISwaggerOptions) {
     try {
       // 处理接口
       requestClasses.forEach(([className, requests]) => {
-        let text = ''
-        requests.forEach(req => {
-          const reqName = options.methodNameMode == 'operationId' ? req.operationId : req.name
-          text += requestTemplate(reqName, req.requestSchema, options)
-        })
-        text = serviceTemplate(className + options.serviceNameSuffix, text)
-        apiSource += text
+        let _index = options.exclude.findIndex(x => x === className);
+        if (_index === -1) {
+          let text = ''
+          requests.forEach(req => {
+            const reqName = options.methodNameMode == 'operationId' ? req.operationId : req.name
+            text += requestTemplate(reqName, req.requestSchema, options)
+          })
+          text = serviceTemplate(className + options.serviceNameSuffix, text)
+          apiSource += text
+        }
       })
 
       // 处理类和枚举
